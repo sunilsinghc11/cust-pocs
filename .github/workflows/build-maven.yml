@@ -46,14 +46,13 @@ jobs:
             env:
               JF_URL: https://${{ vars.JF_URL }}/ 
               JF_PROJECT: mgm-project
-            run: jf mvn compile deploy
-            # run: jf mvn package deploy
+            run: jf mvn package deploy
           
           - name: Audit with JFrog Xray
             run: jf audit .
 
           - name: Audit with JFrog Xray
-            run:  jfrog scan --watches=my-watch **/*
+            run:  jf scan --watches=my-watch **/*
     
           - name: Collect environment variables for build
             env:
