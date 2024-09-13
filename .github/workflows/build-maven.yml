@@ -40,14 +40,15 @@ jobs:
             with:
                     oidc-provider-name: mgm-demo 
                     oidc-audience: mgm-demo-aud
-
-            
-          #    - name: Configure Artifactory server
-          #      run: jf config add $JFROG_PLATFORM_SERVER_ID --url=$JF_URL --user=$JF_USER --access-token=$JF_ACCESS_TOKEN
-
+         
           - name: Configure Maven
             run: jf mvnc --repo-deploy-releases $JFROG_PLATFORM_REPO --repo-deploy-snapshots $JFROG_PLATFORM_REPO --repo-resolve-releases $JFROG_PLATFORM_REPO --repo-resolve-snapshots $JFROG_PLATFORM_REPO
 
+          - name: Build and Upload JAR to Artifactory
+            env:
+              JF_URL: https://psazuse.jfrog.io 
+            run: jf mvn clean package deploy
+        
   # frogbot-scan:
   #   runs-on: ubuntu-latest
   #   needs: build-publish-maven
