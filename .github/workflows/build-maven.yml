@@ -53,7 +53,7 @@ jobs:
             run: jf audit .
 
           - name: Audit with JFrog Xray
-            run:  jfrog scan --watches=my-watch --recursive=true **/*
+            run:  jfrog scan --watches=my-watch **/*
     
           - name: Collect environment variables for build
             env:
