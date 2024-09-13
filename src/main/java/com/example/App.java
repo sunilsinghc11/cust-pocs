@@ -2,34 +2,7 @@ package com.example;
 
 public class App {
     public static void main(String[] args) {
-        String password = "-----BEGIN PRIVATE KEY-----
-MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCbKLitoyZOYd98
-uEuKIRubpaJcRD8FpXgJw87BustL28eTRUp+ES1PAIG0Z/enxKK60lGseTqzsL8I
-VtAkRrkrYt8ZwVG477O1/x9mfR6OiOL656CZWYZe5kLjbIKGzHmGBkhUeTMp0oQ2
-17Nl4WuMr7nUC9xzfFLQtUG0npt4jo33Oxb+FjKiqTPrArpoCy1g1UMHvMtBiQDg
-IrfyN2KYZds8afnjY9lbBaipLEHcwWcfailxNilndn020GccvbhQWVC8BILzuwEl
-xP8btxrOQ05DQcJu6mN+n3Q6dS+maYTx92DFwZrPci5daW2FG5A2I9vyyjZaM9CU
-ibihKWvXAgMBAAECggEAAX4iTLVZnH5vjn0daO5JnDU7OyUC8DR306w5FH8ODqRG
-JsIPZegXZf+sv8YSSWBoamC0nXKrIGhuZg+jv/2YMXUpjU9hUGSp93HFZRCGFzv0
-5xIMZv1IACi58wMrvE1CTApKbtmdpuTaFcb8eFnzVW6pXINisw+6ojxkLe8qsr20
-gyIs4Tg93jSz7FlEj3cgSmeI1uJLUJxafievvi3QdNHET78i1DVKIye0H9JwBiXV
-H4shDEm/KcfZIbVNa8GXLnPp9TA0T4BC8fU8B7uX+0T0hIb8Su8RGWAJAjuIIir1
-rQyuSRlo2EINSYuUJOvhmIOUgQBCTvaSEeplR86AVQKBgQDUwgcBFyqBbvupcWmf
-rXyj/JnEpnUAr3YUF6MYzguq6EhoRnSm7oMj+nD9PYx6q9DJeNTLIf/dXRkssacB
-3dTzZxYq+AtLnNYrdCYBjfnQhaHaAxgW6b6pmjRTtXo0b8EHJSHFwZycXPJPE8Yf
-raH/EL8Ag8ms5VkUkB0qwrkANQKBgQC6sccP2rDIXeA96wFJh7pInimHjHfTIsER
-hnJDowfupnuYG1WFkfZKaV/5xfCj1Qh2HQp4VCrytBRD6RIzE92g9c93Vd/XBxSQ
-lIRmhmFw6XFtJvzgihmlAWUVcrFXgOxcgI86EKbx/tLi5wccGnV/7rZCICBIztap
-JIOeOxoVWwKBgFbKvC6+s5FPpAxQfsUr8a+4CUaGnS5lZab2qYsh6vKShY88RrQe
-kpLnxJYaOKeGVcsKpswjF4zHQNDRvA5v30JYKFvpCjqTRW8+l46Ey4c8LHWSU45t
-VmE7zeLkInEnsbfnduqEfA3xgMuvhmA/5dj2jOR53pjQitFvpOZfvzaNAoGADWIV
-HQPWTGa+XnHsQ7MhHXeJDph5Nn91S6ZRppuXQ/pXPc4n0U1nVGo9YRBZccUhuCXY
-zEtsUL2r/jpE/bhc2N8GIk3bn/R3+u1KmHbloUx6vxJealI8CGITNvhj0hwB1Ze5
-rLXo4cwcnftlvRQAfE1Gb3MSHWYGaVWewccG1aUCgYA3JlaPpbG2eulnUA/QQWZu
-ZjC6pTny5kJZ68Bypar2fZCHVepKclI4zWcTbW5HTse4iQ+GhxIvDrsALzJtm05u
-5wrfYf7h5+2VO2X4+fL3sbxNdJdnL6Vkntxb8/vmeclxKTxQVL1pR24QIvJsGqtl
-76zOB0jLhW3f9kDLERen6A==
------END PRIVATE KEY-----";
+        String password = "gho_16C7e42F292c6912E7710c838347Ae178B4a";
         System.out.println("Welcome to MGM DEMO");
         System.out.println("Your password is: " + password);
     }
