@@ -49,7 +49,27 @@ jobs:
               JF_URL: https://psazuse.jfrog.io 
               JF_PROJECT: mgm-project
             run: jf mvn clean package deploy
-        
+          
+          - name: Audit with JFrog Xray
+            run: jf audit .
+    
+          - name: Collect environment variables for build
+            env:
+              CI_JOB_NAME: ${{ github.job }}
+              CI_JOB_ID: ${{ github.run_id }}
+            run: jf rt bce $CI_JOB_NAME $CI_JOB_ID
+    
+          - name: Collect VCS details from Git
+            env:
+              CI_JOB_NAME: ${{ github.job }}
+              CI_JOB_ID: ${{ github.run_id }}
+            run: jf rt bag $CI_JOB_NAME $CI_JOB_ID
+    
+          - name: Publish build info
+            env:
+              CI_JOB_NAME: ${{ github.job }}
+              CI_JOB_ID: ${{ github.run_id }}
+            run: jf rt bp $CI_JOB_NAME $CI_JOB_ID   
   # frogbot-scan:
   #   runs-on: ubuntu-latest
   #   needs: build-publish-maven
@@ -69,39 +89,3 @@ jobs:
   #         getFrogbotScriptPath=$(if [ -z "$JF_RELEASES_REPO" ]; then echo "https://releases.jfrog.io"; else echo "${JF_URL}/artifactory/${JF_RELEASES_REPO}"; fi)
   #         curl -fLg "$getFrogbotScriptPath/artifactory/frogbot/v2/[RELEASE]/getFrogbot.sh" | sh
   #         ./frogbot ${FROGBOT_CMD}
-
-  perform-java-build:
-    runs-on: maven:3.8.5-openjdk-18
-    needs: build-publish-maven
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-
-      - name: Audit with JFrog Xray
-        run: jf audit .
-
-      - name: Build and Upload JAR to Artifactory
-        env:
-          JF_URL: ${{ vars.JF_URL }}
-       #   JF_USER: ${{ secrets.JF_USER }}
-       #   JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
-       #   JFROG_PLATFORM_REPO: ${{ secrets.JFROG_PLATFORM_REPO }}
-        run: jf mvn clean package deploy
-
-      - name: Collect environment variables for build
-        env:
-          CI_JOB_NAME: ${{ github.job }}
-          CI_JOB_ID: ${{ github.run_id }}
-        run: jf rt bce $CI_JOB_NAME $CI_JOB_ID
-
-      - name: Collect VCS details from Git
-        env:
-          CI_JOB_NAME: ${{ github.job }}
-          CI_JOB_ID: ${{ github.run_id }}
-        run: jf rt bag $CI_JOB_NAME $CI_JOB_ID
-
-      - name: Publish build info
-        env:
-          CI_JOB_NAME: ${{ github.job }}
-          CI_JOB_ID: ${{ github.run_id }}
-        run: jf rt bp $CI_JOB_NAME $CI_JOB_ID
