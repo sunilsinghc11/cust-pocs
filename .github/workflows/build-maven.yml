@@ -29,9 +29,6 @@ jobs:
           - name: Check out repository
             uses: actions/checkout@v4
         
-          #    - name: Install JFrog CLI
-          #    run: curl -fL https://install-cli.jfrog.io | sh
-      
           - name: Setup JFrog CLI
             id: se-clitup  
             uses: jfrog/setup-jfrog-cli@v4
@@ -71,22 +68,41 @@ jobs:
               CI_JOB_NAME: ${{ github.job }}
               CI_JOB_ID: ${{ github.run_id }}
             run: jf rt bp $CI_JOB_NAME $CI_JOB_ID   
-  # frogbot-scan:
-  #   runs-on: ubuntu-latest
-  #   needs: build-publish-maven
-  #   steps:
-  #     - name: Check out repository
-  #       uses: actions/checkout@v4
 
-  #     - name: Execute Frogbot Scan
-  #       env:
-  #         JF_URL: ${{ vars.JF_URL }}
-  #         JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
-  #         JF_GIT_TOKEN: ${{ secrets.USER_TOKEN }}
-  #         JF_GIT_PROVIDER: gitlab
-  #         JF_GIT_OWNER: ${{ github.repository_owner }}
-  #         JF_GIT_REPO: ${{ github.repository }}
-  #       run: |
-  #         getFrogbotScriptPath=$(if [ -z "$JF_RELEASES_REPO" ]; then echo "https://releases.jfrog.io"; else echo "${JF_URL}/artifactory/${JF_RELEASES_REPO}"; fi)
-  #         curl -fLg "$getFrogbotScriptPath/artifactory/frogbot/v2/[RELEASE]/getFrogbot.sh" | sh
-  #         ./frogbot ${FROGBOT_CMD}
+          - name: Authenticate Docker
+            uses: docker/login-action@v3
+            with:
+                registry: ${{ vars.JF_URL }}
+                username: ${{ steps.setup-cli.outputs.oidc-user }}
+                password: ${{ steps.setup-cli.outputs.oidc-token }}
+
+          - name: docker build through 
+            run: |  
+                jf docker --version
+                jf docker build --tag ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }} --metadata-file  metadata.json --push .
+                
+          - name: docker scan
+            run: |  
+                 jf docker pull ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}
+                 jf docker scan ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}   
+
+          - name: add docker package to build
+            run: |  
+                 echo "----------------"
+                 cat metadata.json
+                 echo "----------------"
+                 digest=$(cat metadata.json | jq '.["containerimage.digest"]')
+                 echo "digest=$digest"
+                 echo "${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}@$digest" > metadata.json
+                 jf rt build-docker-create ${{ env.DOCKER_REPO }} --image-file metadata.json 
+
+          - name: publish build info
+            run: |
+                jf rt build-collect-env 
+                jf rt build-add-dependencies .
+                jf rt build-add-git
+                jf rt build-publish
+                jf rt bp $CI_JOB_NAME $CI_JOB_ID
+            
+
+
