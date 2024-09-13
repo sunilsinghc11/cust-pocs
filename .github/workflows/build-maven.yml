@@ -20,10 +20,11 @@ jobs:
       env:
         DOCKER_REPO: 'mgm-project-docker-local'
         IMAGE_NAME: 'my-very-cool-image:${{ github.run_number }}'
-        JF_URL: https://${{ vars.JF_URL }}/
+        JF_URL: https://psazuse.jfrog.io 
         DOCKER_CLI_EXPERIMENTAL: enabled
         JFROG_PLATFORM_REPO: 'mgm-project-maven-virtual'
-
+        JF_PROJECT: mgm-project
+        
       steps:
           - name: Check out repository
             uses: actions/checkout@v4
