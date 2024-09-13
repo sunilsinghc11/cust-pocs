@@ -1,0 +1,1 @@
+{"defaultDeploymentRepo":"sunil-maven-us-local","key":"sunil-maven-us-virtual","packageType":"maven","rclass":"virtual","repoLayoutRef":"maven-2-default","repositories":"sunil-maven-us-local,sunil-maven-us-local-qa,sunil-maven-us-local-prod,sunil-maven-us-remote","externalDependenciesRemoteRepo":"sunil-maven-us-remote"}

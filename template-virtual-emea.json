@@ -1,0 +1,1 @@
+{"defaultDeploymentRepo":"sunil-maven-emea-local","key":"sunil-maven-emea-virtual","packageType":"maven","rclass":"virtual","repoLayoutRef":"maven-2-default","repositories":"sunil-maven-emea-local,sunil-maven-emea-local-qa,sunil-maven-emea-local-prod,sunil-maven-emea-remote","externalDependenciesRemoteRepo":"sunil-maven-emea-remote"}
