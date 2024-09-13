@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - dev
   pull_request:
     branches:
       - main
@@ -67,7 +68,7 @@ jobs:
   #         ./frogbot ${FROGBOT_CMD}
 
   perform-java-build:
-    runs-on: ubuntu-latest
+    runs-on: maven:3.8.5-openjdk-18
     needs: build-publish-maven
     steps:
       - name: Check out repository
