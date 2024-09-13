@@ -30,7 +30,7 @@ jobs:
             uses: actions/checkout@v4
         
           - name: Setup JFrog CLI
-            id: se-clitup  
+            id: setup-cli 
             uses: jfrog/setup-jfrog-cli@v4
             env:
                   JF_URL: https://psazuse.jfrog.io 
