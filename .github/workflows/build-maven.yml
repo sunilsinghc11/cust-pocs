@@ -47,6 +47,7 @@ jobs:
           - name: Build and Upload JAR to Artifactory
             env:
               JF_URL: https://psazuse.jfrog.io 
+              JF_PROJECT: mgm-project
             run: jf mvn clean package deploy
         
   # frogbot-scan:
