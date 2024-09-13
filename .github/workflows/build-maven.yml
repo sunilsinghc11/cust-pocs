@@ -46,7 +46,7 @@ jobs:
             env:
               JF_URL: https://${{ vars.JF_URL }}/ 
               JF_PROJECT: mgm-project
-              run: jf mvn compile deploy
+            run: jf mvn compile deploy
             # run: jf mvn package deploy
           
           - name: Audit with JFrog Xray
