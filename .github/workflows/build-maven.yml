@@ -95,7 +95,7 @@ jobs:
               cat metadata.json
               echo "----------------"
               digest=$(jq -r '.[0].RepoDigests[0]' metadata.json | awk -F '@' '{print $2}')
-              jf rt ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }} --image-file metadata.json
+              jf rt build-docker-create ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }} --image-file metadata.json
               jf rt build-collect-env $JFROG_CLI_BUILD_NAME $JFROG_CLI_BUILD_NUMBER
               jf rt build-publish $JFROG_CLI_BUILD_NAME $JFROG_CLI_BUILD_NUMBER
 
