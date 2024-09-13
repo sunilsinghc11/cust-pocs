@@ -95,7 +95,8 @@ jobs:
               cat metadata.json
               echo "----------------"
               digest=$(jq -r '.[0].RepoDigests[0]' metadata.json | awk -F '@' '{print $2}')
-              jf rt build-docker-create ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }} --image-file metadata.json
+              echo "${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}@$digest" > metadata.json
+              jf rt build-docker-create ${{ env.DOCKER_REPO }} --image-file metadata.json
 
           - name: publish build info
             run: |
