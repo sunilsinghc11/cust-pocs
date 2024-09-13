@@ -50,6 +50,10 @@ jobs:
           
           - name: Audit with JFrog Xray
             run: jf audit .
+
+          - name: Audit with JFrog Xray
+            run: jfrog xr scan --watches mgm-xray-watch --recursive=true --project=$JF_PROJECT
+
     
           - name: Collect environment variables for build
             env:
@@ -85,16 +89,19 @@ jobs:
             run: |  
                  jf docker pull ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}
                  jf docker scan ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}   
+          - name: Gather Docker image metadata
+            run: |
+              docker inspect psazuse.jfrog.io/mgm-project-docker-local/my-very-cool-image:16 > metadata.json
+              echo "----------------"
+              cat metadata.json
+              echo "----------------"
+              digest=$(jq -r '.[0].RepoDigests[0]' metadata.json | awk -F '@' '{print $2}')
+              jfrog rt ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }} --image-file metadata.json
+              jfrog rt build-collect-env $JFROG_CLI_BUILD_NAME $JFROG_CLI_BUILD_NUMBER
+              jfrog rt build-publish $JFROG_CLI_BUILD_NAME $JFROG_CLI_BUILD_NUMBER
 
-          - name: add docker package to build
-            run: |  
-                 echo "----------------"
-                 cat metadata.json
-                 echo "----------------"
-                 digest=$(cat metadata.json | jq '.["containerimage.digest"]')
-                 echo "digest=$digest"
-                 echo "${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}@$digest" > metadata.json
-                 jf rt build-docker-create ${{ env.DOCKER_REPO }} --image-file metadata.json 
+          - name: Scan Docker image with JFrog Xray
+            run: jfrog xr scan ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }} --project=mgm-project
 
           - name: publish build info
             run: |
