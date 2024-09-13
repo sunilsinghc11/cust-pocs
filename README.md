@@ -1,1 +1,1 @@
-# mgm-demo
+# jfrog-sast-frogbot-java-sample
