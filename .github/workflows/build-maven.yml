@@ -32,15 +32,16 @@ jobs:
           #    run: curl -fL https://install-cli.jfrog.io | sh
       
           - name: Setup JFrog CLI
+            id: se-clitup  
             uses: jfrog/setup-jfrog-cli@v4
-            id: setup-cli
             env:
-              JF_URL: https://${{ vars.JF_URL }}/
-              JF_PROJECT: ${{ vars.JF_PROJECT }}
+                  JF_URL: https://psazuse.jfrog.io 
+                  JF_PROJECT: mgm-project
             with:
-                oidc-provider-name: mgm-demo 
-                oidc-audience: mgm-demo-aud
-        
+                    oidc-provider-name: mgm-demo 
+                    oidc-audience: mgm-demo-aud
+
+            
           #    - name: Configure Artifactory server
           #      run: jf config add $JFROG_PLATFORM_SERVER_ID --url=$JF_URL --user=$JF_USER --access-token=$JF_ACCESS_TOKEN
 
