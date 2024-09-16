@@ -26,34 +26,6 @@
                     <target>11</target>
                 </configuration>
             </plugin>
-
-            <plugin>
-    <groupId>com.atlassian.vault</groupId>
-    <artifactId>vault-maven-plugin</artifactId>
-    <version>1.0.0</version>
-    <executions>
-        <execution>
-            <goals>
-                <goal>retrieve</goal>
-            </goals>
-        </execution>
-    </executions>
-    <configuration>
-        <vaultAddress>https://your-vault-address</vaultAddress>
-        <vaultToken>your-vault-token</vaultToken>
-        <secrets>
-            <secret>
-                <path>secret/path</path>
-                <key>MY_SECRET</key>
-                <variable>mySecret</variable>
-            </secret>
-            <secret>
-                <text>This is my secret text string</text>
-                <variable>mySecretText</variable>
-            </secret>
-         </secrets>
-        </configuration>
-       </plugin>
     </plugins>
   </build>
     <repositories>
