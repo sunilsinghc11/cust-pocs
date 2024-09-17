@@ -27,9 +27,8 @@
                 </configuration>
             </plugin>
     </plugins>
-  </build>
-  <build>
-        <resources>
+
+    <resources>
             <resource>
                 <directory>src/main/resources</directory>
                 <includes>
@@ -37,6 +36,7 @@
                 </includes>
             </resource>
         </resources>
+        
     </build>
     
     <!-- <repositories>
