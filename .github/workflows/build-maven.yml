@@ -46,6 +46,7 @@ jobs:
           /opt/hostedtoolcache/jf/2.67.0/x64/jf config add setup-jfrog-cli-server --url https://psazuse.jfrog.io/ --interactive=false --overwrite=true --access-token=$JF_ACCESS_TOKEN
           jf -v
           jf rt ping
+          jf config show
           jf mvnc --repo-deploy-releases=$JFROG_PLATFORM_REPO --repo-deploy-snapshots=$JFROG_PLATFORM_REPO --repo-resolve-releases=$JFROG_PLATFORM_REPO --repo-resolve-snapshots=$JFROG_PLATFORM_REPO
           jf mvn clean package deploy
           
