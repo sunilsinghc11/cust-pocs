@@ -25,8 +25,10 @@ jobs:
       DOCKER_CLI_EXPERIMENTAL: enabled
       JFROG_PLATFORM_REPO: 'mgm-project-maven-virtual'
       JF_PROJECT: mgm-project
+      JFROG_USERNAME: ${{ secrets.JFROG_USERNAME }}
 
     steps:
+      
       - name: Check out repository
         uses: actions/checkout@v4
 
@@ -38,20 +40,22 @@ jobs:
         env:
           JF_URL: ${{ env.JF_URL }}
           JF_PROJECT: mgm-project
-          JF_ACCESS_TOKEN: ${{ vars.JF_ACCESS_TOKEN }}
+          JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
 
-      - name: Configure Maven
+      - name: Verify JFrog CLI Installation
+        run: jf -v
+
+      - name: Configure JFrog CLI
         run: |
-         # jf rt config --url=${{ vars.JF_URL }} --access-token=$JF_ACCESS_TOKEN
-          /opt/hostedtoolcache/jf/2.67.0/x64/jf config add setup-jfrog-cli-server --url https://psazuse.jfrog.io/ --interactive=false --overwrite=true --access-token=$JF_ACCESS_TOKEN
-          jf -v
           jf rt ping
-          jf config show
+          jf rt config --url=$JF_URL --access-token=$JF_ACCESS_TOKEN
           jf mvnc --repo-deploy-releases=$JFROG_PLATFORM_REPO --repo-deploy-snapshots=$JFROG_PLATFORM_REPO --repo-resolve-releases=$JFROG_PLATFORM_REPO --repo-resolve-snapshots=$JFROG_PLATFORM_REPO
-          jf mvn clean package deploy
-          
-   #   - name: Build and Upload JAR to Artifactory
-   #     run: jf mvn clean package deploy
+
+      - name: Set up Maven settings for JFrog
+        run: echo '${{ secrets.MVN_SETTINGS_XML }}' > $GITHUB_WORKSPACE/settings.xml
+
+      - name: Build and Upload JAR to Artifactory
+        run: jf mvn clean package deploy -s $GITHUB_WORKSPACE/settings.xml -f path/to/pom.xml
 
       - name: Audit with JFrog Xray
         run: jf audit .
@@ -75,7 +79,7 @@ jobs:
         with:
           registry: ${{ vars.JF_URL }}
           username: 'sunils'
-          password: ${{ vars.JF_ACCESS_TOKEN }}
+          password: ${{ secrets.JF_ACCESS_TOKEN }}
 
       - name: Build Docker image
         run: |  
