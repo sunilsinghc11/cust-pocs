@@ -10,107 +10,98 @@ on:
     branches:
       - main
 permissions:
-  actions: read # for detecting the Github Actions environment.
+  actions: read # for detecting the GitHub Actions environment.
   id-token: write # for creating OIDC tokens for signing.
   packages: write # for uploading attestation.
   contents: read
 
 jobs:
   build-publish-maven:
-      runs-on: ubuntu-latest
-      env:
-        DOCKER_REPO: 'mgm-project-docker-local'
-        IMAGE_NAME: 'my-very-cool-image:${{ github.run_number }}'
-        JF_URL: https://${{ vars.JF_URL }}/ 
-        DOCKER_CLI_EXPERIMENTAL: enabled
-        JFROG_PLATFORM_REPO: 'mgm-project-maven-virtual'
-        JF_PROJECT: mgm-project
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_REPO: 'mgm-project-docker-local'
+      IMAGE_NAME: 'my-very-cool-image:${{ github.run_number }}'
+      JF_URL: https://${{ vars.JF_URL }}/ 
+      DOCKER_CLI_EXPERIMENTAL: enabled
+      JFROG_PLATFORM_REPO: 'mgm-project-maven-virtual'
+      JF_PROJECT: mgm-project
 
-      steps:
-          - name: Check out repository
-            uses: actions/checkout@v4
-        
-          - name: Setup JFrog CLI
-            id: setup-cli 
-            uses: jfrog/setup-jfrog-cli@v4
-            env:
-             JF_URL: https://${{ vars.JF_URL }}/
-             JF_PROJECT: mgm-project
-             JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
-         
-          - name: Configure Maven
-            run: |
-                 jf rt ping
-                 jf mvnc --repo-deploy-releases $JFROG_PLATFORM_REPO --repo-deploy-snapshots $JFROG_PLATFORM_REPO --repo-resolve-releases $JFROG_PLATFORM_REPO --repo-resolve-snapshots $JFROG_PLATFORM_REPO
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
 
-          - name: Build and Upload JAR to Artifactory
-            env:
-              JF_URL: https://${{ vars.JF_URL }}/ 
-              JF_PROJECT: mgm-project
-            run: jf mvn clean package deploy
-          
-          - name: Audit with JFrog Xray
-            run: jf audit .
+      - name: Setup JFrog CLI
+        id: setup-cli 
+        uses: jfrog/setup-jfrog-cli@v4
+        with:
+          jfrog-version: latest
+        env:
+          JF_URL: ${{ env.JF_URL }}
+          JF_PROJECT: mgm-project
+          JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
 
-          - name: Audit with JFrog Xray
-            run:  jf scan **/*
-    
-          - name: Collect environment variables for build
-            env:
-              CI_JOB_NAME: ${{ github.job }}
-              CI_JOB_ID: ${{ github.run_id }}
-            run: jf rt bce $CI_JOB_NAME $CI_JOB_ID
-    
-          - name: Collect VCS details from Git
-            env:
-              CI_JOB_NAME: ${{ github.job }}
-              CI_JOB_ID: ${{ github.run_id }}
-            run: jf rt bag $CI_JOB_NAME $CI_JOB_ID
-    
-          - name: Publish build info
-            env:
-              CI_JOB_NAME: ${{ github.job }}
-              CI_JOB_ID: ${{ github.run_id }}
-            run: |            
-                jf rt bp $CI_JOB_NAME $CI_JOB_ID
-                jf build-scan $CI_JOB_NAME $CI_JOB_ID
+      - name: Configure Maven
+        run: |
+          jf -v
+          jf rt ping
+          jf rt config --url=$JF_URL --access-token=$JF_ACCESS_TOKEN
+          jf mvnc --repo-deploy-releases=$JFROG_PLATFORM_REPO --repo-deploy-snapshots=$JFROG_PLATFORM_REPO --repo-resolve-releases=$JFROG_PLATFORM_REPO --repo-resolve-snapshots=$JFROG_PLATFORM_REPO
 
-          - name: Authenticate Docker
-            uses: docker/login-action@v3
-            with:
-              registry: ${{ vars.JF_URL }}
-              username: sunils
-              password: ${{ secrets.JF_ACCESS_TOKEN }}
+      - name: Build and Upload JAR to Artifactory
+        run: jf mvn clean package deploy -f path/to/pom.xml
 
-          - name: docker build through 
-            run: |  
-                jf docker --version
-                jf docker build --tag ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }} --metadata-file  metadata.json --push .
-                
-          - name: docker scan
-            run: |  
-                 jf docker pull ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}
-                 jf docker scan ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}   
-          - name: Gather Docker image metadata
-            run: |
-              docker inspect ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }} > metadata.json
-              echo "----------------"
-              cat metadata.json
-              echo "----------------"
-              digest=$(jq -r '.[0].RepoDigests[0]' metadata.json | awk -F '@' '{print $2}')
-              echo "${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}@$digest" > metadata.json
-              jf rt build-docker-create ${{ env.DOCKER_REPO }} --image-file metadata.json
+      - name: Audit with JFrog Xray
+        run: jf audit .
 
-          - name: publish build info
-            run: |
-                jf rt build-collect-env 
-                jf rt build-add-dependencies .
-                jf rt build-add-git
-                jf rt build-publish
-                jf rt bp $CI_JOB_NAME $CI_JOB_ID
-          - name: build scan
-            run: |            
-                jf build-scan $CI_JOB_NAME $CI_JOB_ID
-            
+      - name: Scan with JFrog Xray
+        run: jf scan **/*
 
+      - name: Collect environment variables for build
+        run: jf rt bce $GITHUB_JOB $GITHUB_RUN_ID
 
+      - name: Collect VCS details from Git
+        run: jf rt bag $GITHUB_JOB $GITHUB_RUN_ID
+
+      - name: Publish build info
+        run: |            
+          jf rt bp $GITHUB_JOB $GITHUB_RUN_ID
+          jf build-scan $GITHUB_JOB $GITHUB_RUN_ID
+
+      - name: Authenticate Docker
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ vars.JF_URL }}
+          username: 'sunilc'
+          password: ${{ secrets.JF_ACCESS_TOKEN }}
+
+      - name: Build Docker image
+        run: |  
+          jf docker --version
+          jf docker build --tag ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }} --metadata-file metadata.json --push .
+
+      - name: Scan Docker image
+        run: |  
+          jf docker pull ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}
+          jf docker scan ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}   
+
+      - name: Gather Docker image metadata
+        run: |
+          docker inspect ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }} > metadata.json
+          echo "----------------"
+          cat metadata.json
+          echo "----------------"
+          digest=$(jq -r '.[0].RepoDigests[0]' metadata.json | awk -F '@' '{print $2}')
+          echo "${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}@$digest" > metadata.json
+          jf rt build-docker-create ${{ env.DOCKER_REPO }} --image-file metadata.json
+
+      - name: Publish build information
+        run: |
+          jf rt build-collect-env 
+          jf rt build-add-dependencies .
+          jf rt build-add-git
+          jf rt build-publish
+          jf rt bp $GITHUB_JOB $GITHUB_RUN_ID
+
+      - name: Scan build
+        run: |            
+          jf build-scan $GITHUB_JOB $GITHUB_RUN_ID
