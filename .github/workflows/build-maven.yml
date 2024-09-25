@@ -42,9 +42,9 @@ jobs:
 
       - name: Configure Maven
         run: |
+          jf rt config --url=${{ vars.JF_URL }} --access-token=$JF_ACCESS_TOKEN
           jf -v
           jf rt ping
-          jf rt config --url=$JF_URL --access-token=$JF_ACCESS_TOKEN
           jf mvnc --repo-deploy-releases=$JFROG_PLATFORM_REPO --repo-deploy-snapshots=$JFROG_PLATFORM_REPO --repo-resolve-releases=$JFROG_PLATFORM_REPO --repo-resolve-snapshots=$JFROG_PLATFORM_REPO
 
       - name: Build and Upload JAR to Artifactory
