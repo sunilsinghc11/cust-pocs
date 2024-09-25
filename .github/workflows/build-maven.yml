@@ -39,7 +39,9 @@ jobs:
              JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
          
           - name: Configure Maven
-            run: jf mvnc --repo-deploy-releases $JFROG_PLATFORM_REPO --repo-deploy-snapshots $JFROG_PLATFORM_REPO --repo-resolve-releases $JFROG_PLATFORM_REPO --repo-resolve-snapshots $JFROG_PLATFORM_REPO
+            run: |
+                 jf rt ping
+                 jf mvnc --repo-deploy-releases $JFROG_PLATFORM_REPO --repo-deploy-snapshots $JFROG_PLATFORM_REPO --repo-resolve-releases $JFROG_PLATFORM_REPO --repo-resolve-snapshots $JFROG_PLATFORM_REPO
 
           - name: Build and Upload JAR to Artifactory
             env:
