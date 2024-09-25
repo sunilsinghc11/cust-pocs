@@ -38,7 +38,7 @@ jobs:
         env:
           JF_URL: ${{ env.JF_URL }}
           JF_PROJECT: mgm-project
-          JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
+          JF_ACCESS_TOKEN: ${{ vars.JF_ACCESS_TOKEN }}
 
       - name: Configure Maven
         run: |
@@ -71,8 +71,8 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ${{ vars.JF_URL }}
-          username: 'sunilc'
-          password: ${{ secrets.JF_ACCESS_TOKEN }}
+          username: 'sunils'
+          password: ${{ vars.JF_ACCESS_TOKEN }}
 
       - name: Build Docker image
         run: |  
