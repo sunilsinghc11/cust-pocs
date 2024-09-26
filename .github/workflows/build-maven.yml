@@ -33,83 +33,50 @@ jobs:
             id: setup-cli 
             uses: jfrog/setup-jfrog-cli@v4
             env:
-                  JF_URL: https://${{ vars.JF_URL }}/
-                  JF_PROJECT: mgm-project
+                  JF_URL: https://${{ vars.JF_URL-EDGE }}/
             with:
-                    oidc-provider-name: mgm-demo 
-                    oidc-audience: mgm-demo-aud
+                    oidc-provider-name: mgm-demo-edge
+                    oidc-audience: mgm-demo-aud-edge
          
           - name: Configure Maven
-            run: jf mvnc --repo-deploy-releases $JFROG_PLATFORM_REPO --repo-deploy-snapshots $JFROG_PLATFORM_REPO --repo-resolve-releases $JFROG_PLATFORM_REPO --repo-resolve-snapshots $JFROG_PLATFORM_REPO
+           # run: jf mvnc --repo-deploy-releases $JFROG_PLATFORM_REPO --repo-deploy-snapshots $JFROG_PLATFORM_REPO --repo-resolve-releases $JFROG_PLATFORM_REPO --repo-resolve-snapshots $JFROG_PLATFORM_REPO
+            run: jf mvnc --repo-resolve-releases $JFROG_PLATFORM_REPO --repo-resolve-snapshots $JFROG_PLATFORM_REPO
 
           - name: Build and Upload JAR to Artifactory
             env:
               JF_URL: https://${{ vars.JF_URL }}/ 
               JF_PROJECT: mgm-project
-            run: jf mvn clean package deploy
+            run: jf mvn clean package
+
+          - name: Setup JFrog CLI JPD
+            id: setup-cli-JPD 
+            uses: jfrog/setup-jfrog-cli@v4
+            env:
+                  JF_URL: https://${{ vars.JF_URL }}/
+                  JF_PROJECT: mgm-project
+            with:
+                    oidc-provider-name: mgm-demo 
+                    oidc-audience: mgm-demo-aud
           
-          - name: Audit with JFrog Xray
-            run: jf audit .
-
-          - name: Audit with JFrog Xray
-            run:  jf scan --recursive --watches=mgm-watches
-    
-          - name: Collect environment variables for build
+          - name: Build and Upload JAR to Artifactory
             env:
-              CI_JOB_NAME: ${{ github.job }}
-              CI_JOB_ID: ${{ github.run_id }}
-            run: jf rt bce $CI_JOB_NAME $CI_JOB_ID
-    
-          - name: Collect VCS details from Git
-            env:
-              CI_JOB_NAME: ${{ github.job }}
-              CI_JOB_ID: ${{ github.run_id }}
-            run: jf rt bag $CI_JOB_NAME $CI_JOB_ID
-    
-          # - name: Publish build info
-          #   env:
-          #     CI_JOB_NAME: ${{ github.job }}
-          #     CI_JOB_ID: ${{ github.run_id }}
-          #   run: |            
-          #       jf rt bp $CI_JOB_NAME $CI_JOB_ID
-          #       jf build-scan $CI_JOB_NAME $CI_JOB_ID
-
+              JF_URL: https://${{ vars.JF_URL }}/ 
+              JF_PROJECT: mgm-project
+            run: jf mvn deploy
+                              
           - name: Authenticate Docker
             uses: docker/login-action@v3
             with:
                 registry: ${{ vars.JF_URL }}
-                username: ${{ steps.setup-cli.outputs.oidc-user }}
-                password: ${{ steps.setup-cli.outputs.oidc-token }}
+                username: ${{ steps.setup-cli-JPD.outputs.oidc-user }}
+                password: ${{ steps.setup-cli-JPD.outputs.oidc-token }}
 
           - name: docker build through 
             run: |  
                 jf docker --version
                 jf docker build --tag ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }} --metadata-file  metadata.json --push .
                 
-          - name: docker scan
-            run: |  
-                 jf docker pull ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}
-                 jf docker scan ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}   
-          - name: Gather Docker image metadata
-            run: |
-              docker inspect ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }} > metadata.json
-              echo "----------------"
-              cat metadata.json
-              echo "----------------"
-              digest=$(jq -r '.[0].RepoDigests[0]' metadata.json | awk -F '@' '{print $2}')
-              echo "${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}@$digest" > metadata.json
-              jf rt build-docker-create ${{ env.DOCKER_REPO }} --image-file metadata.json
-
-          - name: publish build info
-            run: |
-                jf rt build-collect-env 
-                jf rt build-add-dependencies .
-                jf rt build-add-git
-                jf rt build-publish
-                jf rt bp $CI_JOB_NAME $CI_JOB_ID
-          - name: build scan
-            run: |            
-                jf build-scan $CI_JOB_NAME $CI_JOB_ID
+          
             
 
 
