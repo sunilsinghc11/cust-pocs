@@ -47,7 +47,7 @@ jobs:
             env:
               JF_URL: https://psazeuwedge.jfrog.io/
               
-            run: jf mvn clean package
+            run: jf mvn package
 
           - name: Setup JFrog CLI JPD
             id: setup-cli-JPD 
