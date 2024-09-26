@@ -46,6 +46,7 @@ jobs:
           - name: Build and Upload JAR to Artifactory
             env:
               JF_URL: https://psazeuwedge.jfrog.io/
+              JF_PROJECT: ""
               
             run: jf mvn compile package
 
