@@ -45,8 +45,8 @@ jobs:
 
           - name: Build and Upload JAR to Artifactory
             env:
-              JF_URL: https://${{ vars.JF_URL }}/ 
-              JF_PROJECT: mgm-project
+              JF_URL: https://psazeuwedge.jfrog.io/
+              
             run: jf mvn clean package
 
           - name: Setup JFrog CLI JPD
