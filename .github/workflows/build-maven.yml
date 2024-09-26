@@ -33,10 +33,10 @@ jobs:
             id: setup-cli 
             uses: jfrog/setup-jfrog-cli@v4
             env:
-                  JF_URL: https://${{ vars.JF_URL-EDGE }}/
+                  JF_URL: https://psazeuwedge.jfrog.io/
             with:
-                    oidc-provider-name: mgm-demo-edge
-                    oidc-audience: mgm-demo-aud-edge
+                    oidc-provider-name: github-oidc-edge
+                    oidc-audience: jfrog-github-edge
          
           - name: Configure Maven
            # run: jf mvnc --repo-deploy-releases $JFROG_PLATFORM_REPO --repo-deploy-snapshots $JFROG_PLATFORM_REPO --repo-resolve-releases $JFROG_PLATFORM_REPO --repo-resolve-snapshots $JFROG_PLATFORM_REPO
