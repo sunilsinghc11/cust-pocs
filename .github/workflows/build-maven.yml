@@ -65,7 +65,7 @@ jobs:
               JF_URL: https://${{ vars.JF_URL }}/ 
               JF_PROJECT: mgm-project
             run: |
-                 run: jf mvnc --repo-deploy-releases $JFROG_PLATFORM_REPO --repo-deploy-snapshots $JFROG_PLATFORM_REPO --repo-resolve-releases $JFROG_PLATFORM_REPO --repo-resolve-snapshots $JFROG_PLATFORM_REPO
+                 jf mvnc --repo-deploy-releases $JFROG_PLATFORM_REPO --repo-deploy-snapshots $JFROG_PLATFORM_REPO --repo-resolve-releases $JFROG_PLATFORM_REPO --repo-resolve-snapshots $JFROG_PLATFORM_REPO
                  jf mvn deploy
                  
                               
