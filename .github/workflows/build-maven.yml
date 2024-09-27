@@ -35,7 +35,7 @@ jobs:
             uses: jfrog/setup-jfrog-cli@v4
             env:
                   #JF_URL: https://psazeuwedge.jfrog.io/
-                  JF_URL: https://psazuse.jfrog.io/
+                  JF_URL: https://psemea.jfrog.io/
             with:
                     oidc-provider-name: github-oidc-edge
                     oidc-audience: jfrog-github-edge
