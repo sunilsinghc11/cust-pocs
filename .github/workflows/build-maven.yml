@@ -20,7 +20,7 @@ jobs:
       runs-on: ubuntu-latest
       env:
         DOCKER_REPO: 'mgm-project-docker-local'
-        IMAGE_NAME: 'my-very-cool-image:${{ github.run_number }}'
+        IMAGE_NAME: 'my-very-cool-image-from-edge:${{ github.run_number }}'
         JF_URL: https://${{ vars.JF_URL }}/ 
         DOCKER_CLI_EXPERIMENTAL: enabled
         JFROG_PLATFORM_REPO: 'mgm-project-maven-virtual'
@@ -48,7 +48,7 @@ jobs:
               JF_URL: https://psazeuwedge.jfrog.io/
               JF_PROJECT: ""
               
-            run: jf mvn compile package -X
+            run: jf mvn compile package
 
           - name: Setup JFrog CLI JPD
             id: setup-cli-JPD 
