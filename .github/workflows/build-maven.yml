@@ -34,15 +34,14 @@ jobs:
             id: setup-cli 
             uses: jfrog/setup-jfrog-cli@v4
             env:
-                  #JF_URL: https://psazeuwedge.jfrog.io/
-                  JF_URL: https://psemea.jfrog.io/
+                  JF_URL: https://psazeuwedge.jfrog.io/
             with:
                     oidc-provider-name: github-oidc-edge
                     oidc-audience: jfrog-github-edge
          
           - name: Configure Maven
            # run: jf mvnc --repo-deploy-releases $JFROG_PLATFORM_REPO --repo-deploy-snapshots $JFROG_PLATFORM_REPO --repo-resolve-releases $JFROG_PLATFORM_REPO --repo-resolve-snapshots $JFROG_PLATFORM_REPO
-            run: jf mvnc --repo-resolve-releases my-smart-jpd-emea --repo-resolve-snapshots my-smart-jpd-emea
+            run: jf mvnc --repo-resolve-releases my-smart-edge --repo-resolve-snapshots my-smart-edge
 
           - name: Build and Upload JAR to Artifactory
             env:
