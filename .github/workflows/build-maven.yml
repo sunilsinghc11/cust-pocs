@@ -110,6 +110,7 @@ jobs:
           - name: build scan
             run: |            
                 jf build-scan $CI_JOB_NAME $CI_JOB_ID
+                jf config show
             
 
 
