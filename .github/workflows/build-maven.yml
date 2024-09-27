@@ -81,7 +81,16 @@ jobs:
                 jf docker --version
                 jf docker build --tag ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }} --metadata-file  metadata.json --push .
                 
-          
+          - name: publish build info
+            run: |
+                jf rt build-collect-env 
+                jf rt build-add-dependencies .
+                jf rt build-add-git
+                jf rt build-publish
+                jf rt bp $CI_JOB_NAME $CI_JOB_ID
+          - name: build scan
+            run: |            
+                jf build-scan $CI_JOB_NAME $CI_JOB_ID
             
 
 
