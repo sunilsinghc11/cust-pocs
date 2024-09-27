@@ -64,7 +64,10 @@ jobs:
             env:
               JF_URL: https://${{ vars.JF_URL }}/ 
               JF_PROJECT: mgm-project
-            run: jf mvn deploy
+            run: |
+                 run: jf mvnc --repo-deploy-releases $JFROG_PLATFORM_REPO --repo-deploy-snapshots $JFROG_PLATFORM_REPO --repo-resolve-releases $JFROG_PLATFORM_REPO --repo-resolve-snapshots $JFROG_PLATFORM_REPO
+                 jf mvn deploy
+                 
                               
           - name: Authenticate Docker
             uses: docker/login-action@v3
