@@ -48,7 +48,9 @@ jobs:
               JF_URL: https://psazeuwedge.jfrog.io/
               JF_PROJECT: ""
               
-            run: jf mvn compile package
+            run: |
+                 jf config show
+                 jf mvn compile package
 
           - name: Setup JFrog CLI JPD
             id: setup-cli-JPD 
