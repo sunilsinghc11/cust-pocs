@@ -85,17 +85,14 @@ jobs:
                 
           - name: publish build info
             run: |
+                jf config show
                 jf rt build-collect-env 
                 jf rt build-add-dependencies .
                 jf rt build-add-git
                 jf rt build-publish
                 jf rt bp $CI_JOB_NAME $CI_JOB_ID
-                jf build-scan $CI_JOB_NAME $CI_JOB_ID
-          - name: build scan
-            run: |            
-                jf config show
-                set JFROG_CLI_LOG_LEVEL=DEBUG
                 #jf build-scan $CI_JOB_NAME $CI_JOB_ID
+       
               
             
 
