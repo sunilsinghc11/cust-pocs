@@ -93,6 +93,7 @@ jobs:
           - name: build scan
             run: |            
                 jf config show
+                set JFROG_CLI_LOG_LEVEL=DEBUG
                 jf build-scan $CI_JOB_NAME $CI_JOB_ID
               
             
