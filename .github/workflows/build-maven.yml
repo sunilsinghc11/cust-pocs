@@ -19,13 +19,13 @@ jobs:
   build-publish-maven:
     runs-on: ubuntu-latest
     env:
-      DOCKER_REPO: 'mgm-project-docker-local'
+      DOCKER_REPO: 'optum-main-docker'
       IMAGE_NAME: 'my-very-cool-image:${{ github.run_number }}'
-      JF_URL: https://${{ vars.JF_URL }}/ 
+      JF_URL: https://psazuse.jfrog.io/ 
       DOCKER_CLI_EXPERIMENTAL: enabled
-      JFROG_PLATFORM_REPO: 'mgm-project-maven-virtual'
-      JF_PROJECT: mgm-project
-      JFROG_USERNAME: ${{ secrets.JFROG_USERNAME }}
+      JFROG_PLATFORM_REPO: 'optum-main-libs-snapshot'
+      JF_PROJECT: optum-main
+      
 
     steps:
       
@@ -35,13 +35,13 @@ jobs:
       - name: Setup JFrog CLI
         id: setup-cli 
         uses: jfrog/setup-jfrog-cli@v4
-        with:
-          jfrog-version: latest
         env:
-          JF_URL: ${{ env.JF_URL }}
-          JF_PROJECT: mgm-project
-          JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
-
+          JF_URL: https://psazuse.jfrog.io/
+          JF_PROJECT: optum-main
+        with:
+           oidc-provider-name: optum-main-oidc 
+           oidc-audience: optum-main-aud
+  
       - name: Verify JFrog CLI Installation
         run: jf -v
 
