@@ -19,12 +19,12 @@ jobs:
   build-publish-maven:
       runs-on: ubuntu-latest
       env:
-        DOCKER_REPO: 'mgm-project-docker-local'
+        DOCKER_REPO: 'optum-main-docker-virtual'
         IMAGE_NAME: 'my-very-cool-image-from-edge:${{ github.run_number }}'
         JF_URL: https://${{ vars.JF_URL }}/ 
         DOCKER_CLI_EXPERIMENTAL: enabled
-        JFROG_PLATFORM_REPO: 'mgm-project-maven-virtual'
-        JF_PROJECT: mgm-project
+        JFROG_PLATFORM_REPO: 'optum-main-maven-virtual'
+        JF_PROJECT: optum-main
 
       steps:
           - name: Check out repository
@@ -57,10 +57,10 @@ jobs:
             uses: jfrog/setup-jfrog-cli@v4
             env:
                   JF_URL: https://${{ vars.JF_URL }}/
-                  JF_PROJECT: mgm-project
+                  JF_PROJECT: optum-main
             with:
-                    oidc-provider-name: mgm-demo 
-                    oidc-audience: mgm-demo-aud
+                    oidc-provider-name: optum-main-oidc 
+                    oidc-audience: optum-main-aud
           
           - name: Build and Upload JAR to Artifactory
             env:
