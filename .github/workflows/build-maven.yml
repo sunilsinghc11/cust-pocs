@@ -51,7 +51,7 @@ jobs:
               
             run: |
                  jf config show
-                 jf mvn compile package
+                 jf mvn clean compile package
 
           - name: Setup JFrog CLI JPD
             id: setup-cli-JPD 
