@@ -36,10 +36,10 @@ jobs:
             env:
                   JF_URL: https://psazeuwedge.jfrog.io/
             with:
-                    #oidc-provider-name: github-oidc-edge-group
-                    #oidc-audience: jfrog-github-edge-group-aud
-                    oidc-provider-name: github-oidc-edge
-                    oidc-audience: jfrog-github-edge
+                    oidc-provider-name: github-oidc-edge-group
+                    oidc-audience: jfrog-github-edge-group-aud
+                    #oidc-provider-name: github-oidc-edge
+                    #oidc-audience: jfrog-github-edge
          
           - name: Configure Maven
             # run: jf mvnc --repo-deploy-releases $JFROG_PLATFORM_REPO --repo-deploy-snapshots $JFROG_PLATFORM_REPO --repo-resolve-releases $JFROG_PLATFORM_REPO --repo-resolve-snapshots $JFROG_PLATFORM_REPO
