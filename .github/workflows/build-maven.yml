@@ -5,7 +5,7 @@ on:
     branches:
       - main
       - dev
-      #- multi-oidc
+      - multi-oidc
   pull_request:
     branches:
       - main
