@@ -13,6 +13,11 @@
 
     <dependencies>
         <!-- Add dependencies here if needed -->
+        <dependency>
+            <groupId>cert.demo.op</groupId>
+            <artifactId>op-certified-lib</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
 
     <build>
