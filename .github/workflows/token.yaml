@@ -2,7 +2,7 @@ name: oidc-poc
 on:
     push:
         branches:
-            - 'multi-oidc'
+            - 'main'
 jobs:
     auth:
         permissions:
