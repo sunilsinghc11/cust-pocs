@@ -62,5 +62,21 @@ jobs:
                    jf config add setup-jfrog-cli-server-on-edge --url https://psazeuwedge.jfrog.io --access-token ${{ secrets.JFROG_ACCESS_TOKEN }} --interactive=false
                    jf rt ping
                    jf config show
+
+          - name: Configure Maven
+            # run: jf mvnc --repo-deploy-releases $JFROG_PLATFORM_REPO --repo-deploy-snapshots $JFROG_PLATFORM_REPO --repo-resolve-releases $JFROG_PLATFORM_REPO --repo-resolve-snapshots $JFROG_PLATFORM_REPO
+            #run: jf mvnc --repo-resolve-releases optum-main-maven-smart-repo --repo-resolve-snapshots optum-main-maven-smart-repo
+            run: jf mvnc --repo-resolve-releases optum-main-smart-virtual --repo-resolve-snapshots optum-main-smart-virtual
+         
+
+          - name: Build and Upload JAR to Artifactory
+            env:
+              JF_URL: https://psazeuwedge.jfrog.io/
+              JF_PROJECT: ""
+              
+            run: |
+                 jf config use setup-jfrog-cli-server-on-edge
+                 jf config show
+                 jf mvn clean compile package
          
           
