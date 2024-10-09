@@ -37,10 +37,10 @@ jobs:
             env:
                   JF_URL: https://psazuse.jfrog.io/
             with:
-                    oidc-provider-name: github-oidc-edge-group
-                    oidc-audience: jfrog-github-edge-group-aud
-                    #oidc-provider-name: github-oidc-edge
-                    #oidc-audience: jfrog-github-edge
+                    #oidc-provider-name: github-oidc-edge-group
+                    #oidc-audience: jfrog-github-edge-group-aud
+                    oidc-provider-name: optum-main-oidc
+                    oidc-audience: optum-main-aud
          
           - name: Get id token
             run: |
