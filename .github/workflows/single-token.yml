@@ -59,7 +59,7 @@ jobs:
           
           - name: Configure JFrog CLI
             run: |
-                   jf rt config --url ${{ https://psazeuwedge.jfrog.io}} --access-token ${{ secrets.JFROG_ACCESS_TOKEN }} --interactive=false
+                   jf rt config --url https://psazeuwedge.jfrog.io --access-token ${{ secrets.JFROG_ACCESS_TOKEN }} --interactive=false
                    jf rt ping
                    jf config show
          
