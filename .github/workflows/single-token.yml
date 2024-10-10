@@ -103,6 +103,8 @@ jobs:
               JF_PROJECT: mgm-project
             run: |
                  jf config use setup-jfrog-cli-server
+                 ACCESS_TOKEN=${{ steps.setup-cli-JPD.outputs.oidc-token }}
+                 echo ${ACCESS_TOKEN}
                  jf mvnc --server-id-resolve setup-jfrog-cli-server --repo-deploy-releases $JFROG_PLATFORM_REPO_DEPLOY --repo-deploy-snapshots $JFROG_PLATFORM_REPO_DEPLOY --repo-resolve-releases $JFROG_PLATFORM_REPO_DEPLOY --repo-resolve-snapshots $JFROG_PLATFORM_REPO_DEPLOY
                  jf mvn deploy
                  
