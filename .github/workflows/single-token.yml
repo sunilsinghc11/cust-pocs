@@ -67,7 +67,7 @@ jobs:
           - name: Configure Maven
             # run: jf mvnc --repo-deploy-releases $JFROG_PLATFORM_REPO --repo-deploy-snapshots $JFROG_PLATFORM_REPO --repo-resolve-releases $JFROG_PLATFORM_REPO --repo-resolve-snapshots $JFROG_PLATFORM_REPO
             #run: jf mvnc --repo-resolve-releases optum-main-maven-smart-repo --repo-resolve-snapshots optum-main-maven-smart-repo
-            run: jf mvnc --server-id-resolve setup-jfrog-cli-server-on-edge --repo-resolve-releases optum-main-smart-virtual --repo-resolve-snapshots optum-main-smart-virtual
+            run: jf mvnc --server-id-resolve setup-jfrog-cli-server-on-edge --repo-resolve-releases $JFROG_PLATFORM_REPO --repo-resolve-snapshots $JFROG_PLATFORM_REPO
          
 
           - name: Build and Upload JAR to Artifactory
