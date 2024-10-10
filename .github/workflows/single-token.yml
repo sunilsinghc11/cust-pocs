@@ -24,7 +24,7 @@ jobs:
         IMAGE_NAME: 'my-very-cool-image-from-edge:${{ github.run_number }}'
         JF_URL: https://${{ vars.JF_URL }}/ 
         DOCKER_CLI_EXPERIMENTAL: enabled
-        JFROG_PLATFORM_REPO: 'optum-main-maven-virtual'
+        JFROG_PLATFORM_REPO: 'optum-main-smart-virtual'
         #JFROG_PLATFORM_REPO: 'maven-edge-local'
         JF_PROJECT: optum-main
 
