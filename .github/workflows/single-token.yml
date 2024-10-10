@@ -55,7 +55,9 @@ jobs:
             uses: jfrog/setup-jfrog-cli@v4
             env:
                   JF_URL: https://psazeuwedge.jfrog.io
-                  JF_ACCESS_TOKEN: ${ACCESS_TOKEN}
+                  #JF_ACCESS_TOKEN: ${ACCESS_TOKEN}
+          - run: |
+                jf config add setup-jfrog-cli-server-on-edge --url https://psazeuwedge.jfrog.io --access-token ${ACCESS_TOKEN} --interactive=false
           #  with:
                     #oidc-provider-name: github-oidc-edge-group
                     #oidc-audience: jfrog-github-edge-group-aud
@@ -64,7 +66,7 @@ jobs:
                     
           - name: Check Edge Auth
             run: |
-                   jf config add setup-jfrog-cli-server-on-edge --url https://psazeuwedge.jfrog.io --access-token ${ACCESS_TOKEN} --interactive=false
+                   
                    jf rt ping
                    jf config show
 
