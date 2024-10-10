@@ -24,7 +24,7 @@ jobs:
         IMAGE_NAME: 'my-very-cool-image-from-edge:${{ github.run_number }}'
         JF_URL: https://${{ vars.JF_URL }}/ 
         DOCKER_CLI_EXPERIMENTAL: enabled
-        JFROG_PLATFORM_REPO: 'optum-main-smart-virtual'
+        JFROG_PLATFORM_REPO_RESOLVE : 'optum-main-smart-virtual'
         JFROG_PLATFORM_REPO_DEPLOY : 'optum-main-maven-virtual'
         #JFROG_PLATFORM_REPO: 'maven-edge-local'
         JF_PROJECT: optum-main
@@ -72,9 +72,9 @@ jobs:
                    jf config show
 
           - name: Configure Maven
-            # run: jf mvnc --repo-deploy-releases $JFROG_PLATFORM_REPO --repo-deploy-snapshots $JFROG_PLATFORM_REPO --repo-resolve-releases $JFROG_PLATFORM_REPO --repo-resolve-snapshots $JFROG_PLATFORM_REPO
-            #run: jf mvnc --repo-resolve-releases optum-main-maven-smart-repo --repo-resolve-snapshots optum-main-maven-smart-repo
-            run: jf mvnc --server-id-resolve setup-jfrog-cli-server-on-edge --repo-resolve-releases $JFROG_PLATFORM_REPO --repo-resolve-snapshots $JFROG_PLATFORM_REPO
+            # run: jf mvnc --repo-deploy-releases $JFROG_PLATFORM_REPO_RESOLVE --repo-deploy-snapshots $JFROG_PLATFORM_REPO_RESOLVE --repo-resolve-releases $JFROG_PLATFORM_REPO_RESOLVE --repo-resolve-snapshots $JFROG_PLATFORM_REPO_RESOLVE
+            #run: jf mvnc --repo-resolve-releases $JFROG_PLATFORM_REPO_RESOLVE --repo-resolve-snapshots $JFROG_PLATFORM_REPO_RESOLVE
+            run: jf mvnc --server-id-resolve setup-jfrog-cli-server-on-edge --repo-resolve-releases $JFROG_PLATFORM_REPO_RESOLVE --repo-resolve-snapshots $JFROG_PLATFORM_REPO_RESOLVE
          
 
           - name: Build and Upload JAR to Artifactory
