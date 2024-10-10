@@ -32,16 +32,16 @@ jobs:
           - name: Check out repository
             uses: actions/checkout@v4
         
-          - name: Setup JFrog CLI
-            id: setup-cli 
-            uses: jfrog/setup-jfrog-cli@v4
-            env:
-                  JF_URL: https://psazuse.jfrog.io/
-            with:
+       #   - name: Setup JFrog CLI
+        #    id: setup-cli 
+        #    uses: jfrog/setup-jfrog-cli@v4
+        #    env:
+         #         JF_URL: https://psazuse.jfrog.io/
+          #  with:
                     #oidc-provider-name: github-oidc-edge-group
                     #oidc-audience: jfrog-github-edge-group-aud
-                    oidc-provider-name: optum-main-oidc
-                    oidc-audience: optum-main-aud
+                    #oidc-provider-name: optum-main-oidc
+                    #oidc-audience: optum-main-aud
          
           - name: Get id token
             run: |
