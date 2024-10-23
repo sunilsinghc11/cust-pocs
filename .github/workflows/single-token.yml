@@ -108,7 +108,7 @@ jobs:
                  echo ${ACCESS_TOKEN}
                  jf rt ping
                  jf rt show
-                 jf mvnc --server-id-resolve setup-jfrog-cli-server --repo-deploy-releases $JFROG_PLATFORM_REPO_DEPLOY --repo-deploy-snapshots $JFROG_PLATFORM_REPO_DEPLOY --repo-resolve-releases $JFROG_PLATFORM_REPO_DEPLOY --repo-resolve-snapshots $JFROG_PLATFORM_REPO_DEPLOY
+                 jf mvnc --server-id-resolve setup-jfrog-cli-server-JPD --repo-deploy-releases $JFROG_PLATFORM_REPO_DEPLOY --repo-deploy-snapshots $JFROG_PLATFORM_REPO_DEPLOY --repo-resolve-releases $JFROG_PLATFORM_REPO_DEPLOY --repo-resolve-snapshots $JFROG_PLATFORM_REPO_DEPLOY
                  jf mvn deploy
                  
                               
