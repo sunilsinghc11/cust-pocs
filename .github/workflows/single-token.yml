@@ -4,12 +4,12 @@ on:
   push:
     branches:
       - main
-      - dev
-      - multi-oidc
-      - single-token
+      - single-access-token
+      
   pull_request:
     branches:
       - main
+      
 permissions:
   actions: read # for detecting the Github Actions environment.
   id-token: write # for creating OIDC tokens for signing.
@@ -49,16 +49,16 @@ jobs:
                     ACCESS_TOKEN=$(curl -XPOST -H "Content-Type: application/json" "https://psazuse.jfrog.io/access/api/v1/oidc/token" -d "{\"grant_type\": \"urn:ietf:params:oauth:grant-type:token-exchange\", \"subject_token_type\":\"urn:ietf:params:oauth:token-type:id_token\", \"subject_token\": \"${ID_TOKEN}\", \"provider_name\": \"optum-main-oidc\", \"project_key\": \"\"}" | jq .access_token | tr -d '"')
                     echo "ACCESS_TOKEN=${ACCESS_TOKEN}" >> $GITHUB_ENV
                     echo "ACCESS_TOKEN=${ACCESS_TOKEN}"
-                 #   - name: Setup JFrog CLI
+
            
           - name: Configure JFrog CLI
             id: setup-cli 
             uses: jfrog/setup-jfrog-cli@v4
             env:
                   JF_URL: https://psazeuwedge.jfrog.io
-                  #JF_ACCESS_TOKEN: ${ACCESS_TOKEN}
           - run: |
                 jf config add setup-jfrog-cli-server-on-edge --url https://psazeuwedge.jfrog.io --access-token ${ACCESS_TOKEN} --interactive=false
+          #No OIDC Setup
           #  with:
                     #oidc-provider-name: github-oidc-edge-group
                     #oidc-audience: jfrog-github-edge-group-aud
@@ -72,12 +72,10 @@ jobs:
                    jf config show
 
           - name: Configure Maven
-            # run: jf mvnc --repo-deploy-releases $JFROG_PLATFORM_REPO_RESOLVE --repo-deploy-snapshots $JFROG_PLATFORM_REPO_RESOLVE --repo-resolve-releases $JFROG_PLATFORM_REPO_RESOLVE --repo-resolve-snapshots $JFROG_PLATFORM_REPO_RESOLVE
-            #run: jf mvnc --repo-resolve-releases $JFROG_PLATFORM_REPO_RESOLVE --repo-resolve-snapshots $JFROG_PLATFORM_REPO_RESOLVE
             run: jf mvnc --server-id-resolve setup-jfrog-cli-server-on-edge --repo-resolve-releases $JFROG_PLATFORM_REPO_RESOLVE --repo-resolve-snapshots $JFROG_PLATFORM_REPO_RESOLVE
          
 
-          - name: Build and Upload JAR to Artifactory
+          - name: Build Maven Resolving from Edge
             env:
               JF_URL: https://psazeuwedge.jfrog.io/
               JF_PROJECT: ""
@@ -87,48 +85,32 @@ jobs:
                  jf config show
                  jf mvn clean compile package
          
-          - name: Setup JFrog CLI JPD
-            id: setup-cli-JPD 
-            uses: jfrog/setup-jfrog-cli@v4
-            env:
-                  JF_URL: https://psazuse.jfrog.io/
-                  JF_PROJECT: optum-main
-            with:
-                    oidc-provider-name: optum-main-oidc 
-                    oidc-audience: optum-main-aud
+         #Comment OIDC SETUP 
+          #- name: Setup JFrog CLI JPD
+          #  id: setup-cli-JPD 
+          #  uses: jfrog/setup-jfrog-cli@v4
+          #  env:
+          #        JF_URL: https://psazuse.jfrog.io/
+          #        JF_PROJECT: optum-main
+          #  with:
+          #          oidc-provider-name: optum-main-oidc 
+          #          oidc-audience: optum-main-aud
           
           - name: Build and Upload JAR to Artifactory
             env:
               JF_URL: https://psazuse.jfrog.io/ 
               JF_PROJECT: mgm-project
             run: |
-                 jf config use setup-jfrog-cli-server
-                 ACCESS_TOKEN=${{ steps.setup-cli-JPD.outputs.oidc-token }}
+                 jf config add setup-jfrog-cli-server-JPD --url https://psazuse.jfrog.io/ --access-token ${ACCESS_TOKEN} --interactive=false
+                 jf config use setup-jfrog-cli-server-JPD
+                 #ACCESS_TOKEN=${{ steps.setup-cli-JPD.outputs.oidc-token }}
+                 ACCESS_TOKEN=${ACCESS_TOKEN}
                  echo ${ACCESS_TOKEN}
+                 jf rt ping
+                 jf rt show
                  jf mvnc --server-id-resolve setup-jfrog-cli-server --repo-deploy-releases $JFROG_PLATFORM_REPO_DEPLOY --repo-deploy-snapshots $JFROG_PLATFORM_REPO_DEPLOY --repo-resolve-releases $JFROG_PLATFORM_REPO_DEPLOY --repo-resolve-snapshots $JFROG_PLATFORM_REPO_DEPLOY
                  jf mvn deploy
                  
                               
-          - name: Authenticate Docker
-            uses: docker/login-action@v3
-            with:
-                registry: ${{ vars.JF_URL }}
-                username: ${{ steps.setup-cli-JPD.outputs.oidc-user }}
-                password: ${{ steps.setup-cli-JPD.outputs.oidc-token }}
-
-          - name: docker build through 
-            run: |  
-                jf docker --version
-                jf docker build --tag ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }} --metadata-file  metadata.json --push .
                 
-          - name: publish build info
-            run: |
-                jf config show
-                jf rt build-collect-env 
-                jf rt build-add-dependencies .
-                jf rt build-add-git
-                jf rt build-publish
-                jf rt bp $CI_JOB_NAME $CI_JOB_ID
-                #jf build-scan $CI_JOB_NAME $CI_JOB_ID
-       
           
