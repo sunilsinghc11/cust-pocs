@@ -26,7 +26,6 @@ jobs:
         DOCKER_CLI_EXPERIMENTAL: enabled
         JFROG_PLATFORM_REPO_RESOLVE : 'optum-main-smart-virtual'
         JFROG_PLATFORM_REPO_DEPLOY : 'optum-main-maven-virtual'
-        #JFROG_PLATFORM_REPO: 'maven-edge-local'
         JF_PROJECT: optum-main
 
       steps:
@@ -58,45 +57,25 @@ jobs:
                   JF_URL: https://psazeuwedge.jfrog.io
           - run: |
                 jf config add setup-jfrog-cli-server-on-edge --url https://psazeuwedge.jfrog.io --access-token ${ACCESS_TOKEN} --interactive=false
-          #No OIDC Setup
-          #  with:
-                    #oidc-provider-name: github-oidc-edge-group
-                    #oidc-audience: jfrog-github-edge-group-aud
-                    #oidc-provider-name: optum-main-oidc
-                    #oidc-audience: optum-main-aud
-                    
+                            
           - name: Check Edge Auth
             run: |
-                   
                    jf rt ping
                    jf config show
 
           - name: Configure Maven
             run: jf mvnc --server-id-resolve setup-jfrog-cli-server-on-edge --repo-resolve-releases $JFROG_PLATFORM_REPO_RESOLVE --repo-resolve-snapshots $JFROG_PLATFORM_REPO_RESOLVE
-         
-
+     
           - name: Build Maven Resolving from Edge
             env:
               JF_URL: https://psazeuwedge.jfrog.io/
               JF_PROJECT: ""
-              
             run: |
                  jf config use setup-jfrog-cli-server-on-edge
                  jf config show
                  jf mvn clean compile package
-         
-         #Comment OIDC SETUP 
-          #- name: Setup JFrog CLI JPD
-          #  id: setup-cli-JPD 
-          #  uses: jfrog/setup-jfrog-cli@v4
-          #  env:
-          #        JF_URL: https://psazuse.jfrog.io/
-          #        JF_PROJECT: optum-main
-          #  with:
-          #          oidc-provider-name: optum-main-oidc 
-          #          oidc-audience: optum-main-aud
-          
-          - name: Build and Upload JAR to Artifactory
+                
+          - name: Build and Upload JAR to Artifactory to Central JPD
             env:
               JF_URL: https://psazuse.jfrog.io/ 
               JF_PROJECT: mgm-project
