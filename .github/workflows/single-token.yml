@@ -78,7 +78,7 @@ jobs:
           - name: Build and Upload JAR to Artifactory to Central JPD
             env:
               JF_URL: https://psazuse.jfrog.io/ 
-              JF_PROJECT: mgm-project
+            #  JF_PROJECT: mgm-project
             run: |
                  jf config add setup-jfrog-cli-server-JPD --url https://psazuse.jfrog.io/ --access-token ${ACCESS_TOKEN} --interactive=false
                  jf config use setup-jfrog-cli-server-JPD
