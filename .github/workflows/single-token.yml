@@ -103,11 +103,10 @@ jobs:
             run: |
                  jf config add setup-jfrog-cli-server-JPD --url https://psazuse.jfrog.io/ --access-token ${ACCESS_TOKEN} --interactive=false
                  jf config use setup-jfrog-cli-server-JPD
-                 #ACCESS_TOKEN=${{ steps.setup-cli-JPD.outputs.oidc-token }}
                  ACCESS_TOKEN=${ACCESS_TOKEN}
                  echo ${ACCESS_TOKEN}
                  jf rt ping
-                 jf rt show
+                 jf config show
                  jf mvnc --server-id-resolve setup-jfrog-cli-server-JPD --repo-deploy-releases $JFROG_PLATFORM_REPO_DEPLOY --repo-deploy-snapshots $JFROG_PLATFORM_REPO_DEPLOY --repo-resolve-releases $JFROG_PLATFORM_REPO_DEPLOY --repo-resolve-snapshots $JFROG_PLATFORM_REPO_DEPLOY
                  jf mvn deploy
                  
